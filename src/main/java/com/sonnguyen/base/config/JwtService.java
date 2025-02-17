@@ -5,7 +5,9 @@ import com.sonnguyen.base.model.User;
 import com.sonnguyen.base.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +20,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtService {
 
-    private String secretKey = "a1dae4457f142c88547a17529caec2f12c8ba2cb4ccd599aa75cfd7e5b27752f9d9167d1349a30596931fd238239d6d17fb49a8f63e27fd45cf7c49a65d3fd75";
-    private long expirationTime = 86400000L;
+    @Value("${jwt.SECRET_KEY:a1dae4457f142c88547a17529caec2f12c8ba2cb4ccd599aa75cfd7e5b27752f9d9167d1349a30596931fd238239d6d17fb49a8f63e27fd45cf7c49a65d3fd75}")
+    private String secretKey;
+    @Value("${jwt.expirationMs:3600000}")
+    private long expirationTime;
     private final UserRepository userRepository;
 
     // Generate JWT token for user
@@ -34,7 +38,7 @@ public class JwtService {
                 .setIssuer("sonnguyen.com")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(io.jsonwebtoken.SignatureAlgorithm.HS512, secretKey)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
 
