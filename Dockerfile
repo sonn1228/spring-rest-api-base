@@ -12,4 +12,4 @@ COPY --from=build app/target/base-0.0.1-SNAPSHOT.jar /run/base-0.0.1-SNAPSHOT.ja
 EXPOSE 8080
 
 ENV JAVA_OPTIONS="-Xmx2048m -Xms256m"
-ENTRYPOINT java -jar $JAVA_OPTIONS /run/base-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java", "-jar", "/run/base-0.0.1-SNAPSHOT.jar"]
