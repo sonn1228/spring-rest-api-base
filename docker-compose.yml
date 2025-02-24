@@ -1,0 +1,44 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: spring_rest_api_base
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - spring_network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot" ]
+      interval: 5s
+      retries: 10
+      start_period: 20s
+
+  app:
+    build: .
+    container_name: spring_app
+    depends_on:
+      mysql:
+        condition: service_healthy  # Đợi MySQL sẵn sàng rồi mới khởi động
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTIONS=-Xmx2048m -Xms256m
+    volumes:
+      - ./logs:/logs
+    restart: unless-stopped
+    networks:
+      - spring_network
+
+volumes:
+  mysql_data:
+
+networks:
+  spring_network:
