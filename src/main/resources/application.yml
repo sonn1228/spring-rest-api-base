@@ -8,7 +8,7 @@ spring:
       enabled: ALWAYS
 
   datasource:
-    url: jdbc:mysql://${mysql_container:localhost}:${DB_PORT:3306}/${DB_NAME:spring_rest_api_base}
+    url: jdbc:mysql://${mysql_container:mysql}:${DB_PORT:3306}/${DB_NAME:spring_rest_api_base}
     username: ${DB_USERNAME:root}
     password: ${DB_USERNAME:root}
     driver-class-name: com.mysql.cj.jdbc.Driver

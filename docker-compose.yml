@@ -26,7 +26,7 @@ services:
     container_name: spring_app
     depends_on:
       mysql:
-        condition: service_healthy  # Đợi MySQL sẵn sàng rồi mới khởi động
+        condition: service_healthy 
     ports:
       - "8080:8080"
     environment:
