@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.4.4, for Linux (aarch64)
+-- MySQL dump 10.13  Distrib 8.0.41, for Linux (aarch64)
 --
 -- Host: localhost    Database: spring_rest_api_base
 -- ------------------------------------------------------
--- Server version	8.4.4
+-- Server version	8.0.41
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,6 +14,37 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `companies`
+--
+
+DROP TABLE IF EXISTS `companies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `companies` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `address` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `description` mediumtext,
+  `logo` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `updated_at` datetime(6) DEFAULT NULL,
+  `updated_by` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `companies`
+--
+
+LOCK TABLES `companies` WRITE;
+/*!40000 ALTER TABLE `companies` DISABLE KEYS */;
+INSERT INTO `companies` VALUES (1,'123 Main St','2025-03-04 04:36:07.985564','admin','A technology company.','logo.png','Tech Company','2025-03-04 04:36:07.985592',NULL),(2,'123 Main St','2025-03-04 04:37:25.865960',NULL,'A technology company.','logo.png','Tech Company','2025-03-04 04:37:25.865977',NULL),(3,'123 Main St','2025-03-04 04:43:28.470798','system','A technology company.','logo.png','Tech Company','2025-03-04 04:43:28.470818','system'),(4,'123 Main St','2025-03-04 04:47:41.172465','admin','A technology company.','logo.png','Tech Company','2025-03-04 04:47:41.172544','admin');
+/*!40000 ALTER TABLE `companies` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `permissions`
@@ -37,6 +68,32 @@ CREATE TABLE `permissions` (
 LOCK TABLES `permissions` WRITE;
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `category` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product`
+--
+
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES (3,'Phone','iPhone 15 Pro',1200),(4,'Laptop','Laptop Dell XPS',1500),(5,'Phone','iPhone 15 Pro',1200),(6,'Phone','Samsung Galaxy S24',1000),(7,'Laptop','MacBook Pro',2000);
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -138,7 +195,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('523c2f9e-13a2-44e7-b925-3274dc5cb4ec','$2a$10$z7x9JJZuIP3jbFSNk9VLDOJ4JpCeLrmHnkrqLQpE6ZjlKoVLOce6.','admin');
+INSERT INTO `users` VALUES ('0abc7e14-3ff2-42c7-86f9-e4751274b1c4','$2a$10$jsfTPZ/IQa7bdH7e/yUpdezsTOoFvd1lwx7QW9A4m6DqcqqIlvZiq','username'),('523c2f9e-13a2-44e7-b925-3274dc5cb4ec','$2a$10$z7x9JJZuIP3jbFSNk9VLDOJ4JpCeLrmHnkrqLQpE6ZjlKoVLOce6.','admin');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -151,4 +208,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-24  2:05:18
+-- Dump completed on 2025-03-04  7:51:00
