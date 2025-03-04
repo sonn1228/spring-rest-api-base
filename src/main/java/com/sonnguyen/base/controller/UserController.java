@@ -2,13 +2,13 @@ package com.sonnguyen.base.controller;
 
 import com.sonnguyen.base.dto.req.UserReq;
 import com.sonnguyen.base.dto.res.ApiResponse;
-import com.sonnguyen.base.exception.CommonException;
 import com.sonnguyen.base.model.User;
 import com.sonnguyen.base.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,6 +53,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal.id")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<User>> updateUser(@PathVariable String id, @RequestBody @Valid UserReq user) {
         User updatedUser = userService.updateUser(id, user);
