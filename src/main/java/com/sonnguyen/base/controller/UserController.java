@@ -43,7 +43,7 @@ public class UserController {
             @RequestParam(defaultValue = "asc") String sortDirection
     ) {
         Sort sort = sortDirection.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
 
         Page<User> userPage = userService.getUsers(pageable);
         ApiResponse<List<User>> response = new ApiResponse<>(true, "Fetched users successfully", userPage.getContent());
