@@ -6,6 +6,9 @@ import com.sonnguyen.base.model.User;
 import com.sonnguyen.base.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,17 +34,17 @@ public class UserController {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-
     @GetMapping
-    public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        ApiResponse<List<User>> response = ApiResponse.<List<User>>builder()
-                .success(true)
-                .message("Fetched users successfully")
-                .data(users)
-                .build();
+    public ResponseEntity<ApiResponse<List<User>>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> userPage = userService.getUsers(pageable);
+        ApiResponse<List<User>> response = new ApiResponse<>(true, "Fetched users successfully", userPage.getContent());
         return ResponseEntity.ok(response);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable String id) {

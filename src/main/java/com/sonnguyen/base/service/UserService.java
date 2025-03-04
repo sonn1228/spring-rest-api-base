@@ -5,6 +5,8 @@ import com.sonnguyen.base.exception.CommonException;
 import com.sonnguyen.base.repository.UserRepository;
 import com.sonnguyen.base.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,9 +31,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+
+    public Page<User> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
+
     public User getUserById(String id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElseThrow(() -> new CommonException("User not found", HttpStatus.BAD_REQUEST));
