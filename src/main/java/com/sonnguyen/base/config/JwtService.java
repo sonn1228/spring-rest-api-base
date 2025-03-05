@@ -6,6 +6,7 @@ import com.sonnguyen.base.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -13,18 +14,27 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class JwtService {
 
-    @Value("${jwt.SECRET_KEY:a1dae4457f142c88547a17529caec2f12c8ba2cb4ccd599aa75cfd7e5b27752f9d9167d1349a30596931fd238239d6d17fb49a8f63e27fd45cf7c49a65d3fd75}")
-    private String secretKey;
+    @Value("${jwt.SECRET_KEY}")
+    private String secretKeyRaw;
+
     @Value("${jwt.expirationMs:3600000}")
     private long expirationTime;
+
     private final UserRepository userRepository;
+
+    private SecretKey getSigningKey() {
+        return Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKeyRaw));
+    }
 
     // Generate JWT token for user
     public String generateToken(CustomUserDetails userDetails) {
@@ -38,15 +48,16 @@ public class JwtService {
                 .setIssuer("sonnguyen.com")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
     // Validate JWT token
     public boolean validateToken(String token) {
         try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(secretKey)
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
                     .parseClaimsJws(token)
                     .getBody();
             return !isTokenExpired(claims);
@@ -63,18 +74,18 @@ public class JwtService {
     // Get Authentication object from token
     public Authentication getAuthentication(String token) {
         String username = extractUsername(token);
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        return userOptional.map(user -> {
             UserDetails userDetails = new CustomUserDetails(user);
             return new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        }
-        return null;
+        }).orElse(null);
     }
 
     // Extract username from JWT token
     public String extractUsername(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
@@ -84,5 +95,4 @@ public class JwtService {
         final String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(userDetail.getUsername()) && validateToken(token));
     }
-
 }

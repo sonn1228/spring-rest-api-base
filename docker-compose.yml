@@ -1,18 +1,15 @@
 services:
   mysql:
-    image: mysql:8.0
-    container_name: mysql_container
+    image: mysql:latest
+    container_name: spring_rest_api_base
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: spring_rest_api_base
-      MYSQL_USER: user
-      MYSQL_PASSWORD: root
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./data/mysql:/var/lib/mysql
     networks:
       - spring_network
     healthcheck:

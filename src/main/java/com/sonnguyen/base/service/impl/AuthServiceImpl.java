@@ -10,13 +10,11 @@ import com.sonnguyen.base.repository.RoleRepository;
 import com.sonnguyen.base.repository.UserRepository;
 import com.sonnguyen.base.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,10 +40,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void register(String username, String password) {
-        User existingUser = userRepository.findByUsername(username);
-        if (existingUser != null) {
-            throw new CommonException("username exist", HttpStatus.CONFLICT);
+        if (userRepository.findByUsername(username).isPresent()) {
+            throw new CommonException("Username already exists", HttpStatus.CONFLICT);
         }
+
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new CommonException("Default role not found", HttpStatus.INTERNAL_SERVER_ERROR));
 
@@ -56,5 +54,4 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
     }
-
 }

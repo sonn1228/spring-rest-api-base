@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String helloAdmin(@AuthenticationPrincipal UserDetails userDetails) {
         return "Hello Admin, your username is: " + userDetails.getUsername();
     }
