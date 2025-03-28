@@ -36,6 +36,3 @@ build/
 
 *.md
 ./Dockerfile
-./compose.dev.yml
-./docker-compose.yml
-*.yml
